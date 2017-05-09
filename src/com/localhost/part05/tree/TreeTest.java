@@ -82,4 +82,44 @@ public class TreeTest {
 		boolean isExist = BinaryTree.hasDataByLevelOrder(root, data);
 		System.out.println("二叉树中是否包含元素" + data + ":" + isExist);
 	}
+	
+	/*
+	 * 测试：向二叉树插入一个元素
+	 * 结果：
+	 * 插入元素8后的二叉树层序遍历：
+	 * 1 2 3 4 5 6 7 8 
+	 */
+	@Test
+	public void insertTest() {
+		int data = 8;
+		root = BinaryTree.insert(root, data);
+		// 使用层序遍历
+		BinaryTreeTraversal<Integer> btt = new BinaryTreeTraversal<Integer>();
+		System.out.println("插入元素" + data + "后的二叉树层序遍历：");
+		btt.levelOrder(root);
+	}
+	
+	/*
+	 * 测试：获取二叉树节点个数
+	 * 结果：
+	 * 二叉树节点个数：7
+	 * 二叉树节点个数(非递归)：7
+	 */
+	@Test
+	public void sizeTest() {
+		int size1 = BinaryTree.size(root);
+		int size2 = BinaryTree.sizeByLevelOrder(root);
+		System.out.println("二叉树节点个数：" + size1);
+		System.out.println("二叉树节点个数(非递归)：" + size2);
+	}
+	
+	/*
+	 * 测试：逆向逐层输出树中的元素
+	 * 结果：
+	 * 逐层逆向输出：4 5 6 7 2 3 1 
+	 */
+	@Test
+	public void printLevelInReverseTest() {
+		BinaryTree.printLevelInReverse(root);
+	}
 }

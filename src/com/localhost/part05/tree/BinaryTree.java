@@ -1,5 +1,6 @@
 package com.localhost.part05.tree;
 
+import com.localhost.part03.stack.LinkedListStack;
 import com.localhost.part04.queue.LinkListQueue;
 
 public class BinaryTree {
@@ -129,7 +130,162 @@ public class BinaryTree {
 		return false;
 	}
 	
+	/**
+	 * 题目：向二叉树插入一个元素
+	 * 思路：因为给定的是二叉树，所以能在任意位置插入元素。为了插入元素，可以使用层序遍历找到一个左孩子或右孩子为空的节点，然后插入该元素。
+	 * @param root 二叉树的根节点
+	 * @param data 需要插入的元素
+	 * @return 插入新元素后的根节点
+	 */
+	public static BinaryTreeNode<Integer> insert(BinaryTreeNode<Integer> root, int data) {
+		// 创建新节点
+		BinaryTreeNode<Integer> newNode = new BinaryTreeNode<Integer>(data);
+		// 二叉树为空则设置根节点并返回
+		if (root == null) {
+			root = newNode;
+			return root;
+		}
+		
+		// 出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 创建存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		// 根节点入队
+		queue.enQueue(root);
+		// 队列不为空则遍历
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			
+			// 检查当前节点左孩子是否为空
+			if (temp.getLeft() == null) {
+				temp.setLeft(newNode);
+				return root;
+			} else {
+				queue.enQueue(temp.getLeft());
+			}
+			
+			// 检查当前节点右孩子是否为空
+			if (temp.getRight() == null) {
+				temp.setRight(newNode);
+				return root;
+			} else {
+				queue.enQueue(temp.getRight());
+			}
+		}
+		return null;
+	}
 	
+	/**
+	 * 题目：获取二叉树节点个数
+	 * 思路：递归计算左子树和右子树的大小，再加一
+	 * @param root 二叉树根节点
+	 * @return 二叉树节点数
+	 */
+	public static int size(BinaryTreeNode<Integer> root) {
+		if (root == null) {
+			return 0;
+		} else {
+			return (size(root.getLeft()) + 1 + size(root.getRight()));
+		}
+	}
+	
+	/**
+	 * 题目：非递归获取二叉树节点个数
+	 * 思路：利用层序遍历，有元素出队时节点个数加一
+	 * @param root 二叉树根节点
+	 * @return 二叉树节点数
+	 */
+	public static int sizeByLevelOrder(BinaryTreeNode<Integer> root) {
+		if (root == null) {
+			return 0;
+		}
+		// 出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 创建存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		// 根节点入队
+		queue.enQueue(root);
+		// 计数
+		int count = 0;
+		// 队列不为空则遍历
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 计数加一
+			count++;
+			// 当前节点左子树不为空则入队
+			if (temp.getLeft() != null) {
+				queue.enQueue(temp.getLeft());
+			}
+			// 当前节点右子树不为空则入队
+			if (temp.getRight() != null) {
+				queue.enQueue(temp.getRight());
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 题目：逆向逐层输出树中的元素
+	 * 思路：采用层序遍历，将数据先存入队列，然后出队存入栈中，最后再出栈即可
+	 * 例如下图所示的二叉树逆向逐层输出顺序为：4 5 6 7 2 3 1
+	 *							          二叉树
+	 * 								 1
+	 * 								/ \
+	 * 							   2   3
+	 * 							  / \ / \
+	 * 							 4  5 6  7
+	 * @param root 二叉树根节点
+	 */
+	public static void printLevelInReverse(BinaryTreeNode<Integer> root) {
+		// 如果根节点为空，即二叉树本来就不存在
+		if (root == null) {
+			return;
+		}
+		
+		// 存储出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 创建存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		// 创建存储出队元素的栈
+		LinkedListStack<BinaryTreeNode<Integer>> stack = new LinkedListStack<BinaryTreeNode<Integer>>();
+		
+		// 根节点最先入队
+		queue.enQueue(root);
+		
+		// 队列不为空则遍历
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 将出队元素入栈
+			stack.push(temp);
+			// 右子树先入队
+			if (temp.getRight() != null) {
+				queue.enQueue(temp.getRight());
+			}
+			// 左子树后入队
+			if (temp.getLeft() != null) {
+				queue.enQueue(temp.getLeft());
+			}
+		}
+		
+		// 输出结果
+		System.out.print("逐层逆向输出：");
+		while (!stack.isEmpty()) {
+			System.out.print(stack.pop().getData() + " ");
+		}
+	}
+	
+	/**
+	 * 题目：求已知二叉树高度/深度
+	 * 思路：递归计算左子树和右子树的高度，然后找出两棵树中高度的大值，再加一，就是树的高度。
+	 * @param root 二叉树的根节点
+	 * @return 二叉树的高度/深度
+	 */
+	public static int getHeight(BinaryTreeNode<Integer> root) {
+		return 0;
+	}
 }
 
 
