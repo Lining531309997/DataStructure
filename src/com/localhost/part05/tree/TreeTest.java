@@ -122,4 +122,66 @@ public class TreeTest {
 	public void printLevelInReverseTest() {
 		BinaryTree.printLevelInReverse(root);
 	}
+	
+	/*
+	 * 测试：求已知二叉树高度/深度
+	 * 结果：
+	 * 二叉树的高度/深度：3
+	 * 二叉树的高度/深度(非递归)：3
+	 */
+	@Test
+	public void getHeightTest() {
+		int height1 = BinaryTree.getHeight(root);
+		int height2 = BinaryTree.getHeightByLevelOrder(root);
+		System.out.println("二叉树的高度/深度：" + height1);
+		System.out.println("二叉树的高度/深度(非递归)：" + height2);
+	}
+	
+	/*
+	 * 测试：获取二叉树中最深节点
+	 * 结果：
+	 * 二叉树的高度/深度：3
+	 * 二叉树的高度/深度(非递归)：3
+	 */
+	@Test
+	public void getDeepestNodesTest() {
+		BinaryTree.getDeepestNodes(root);
+	}
+	
+	/*
+	 * 测试：删除二叉树中某个节点
+	 * 结果：
+	 * 删除元素1后的二叉树层序遍历：7 2 3 4 5 6 
+	 */
+	@Test
+	public void deleteBinaryTreeNodeTest() {
+		int data = 1;
+		root = BinaryTree.deleteBinaryTreeNode(root, data);
+		BinaryTreeTraversal<Integer> btt = new BinaryTreeTraversal<Integer>();
+		System.out.print("删除元素" + data + "后的二叉树层序遍历：");
+		btt.levelOrder(root);
+	}
+	
+	/*
+	 * 测试：用非递归算法获取二叉树叶子节点个数
+	 * 结果：
+	 * 二叉树叶子节点的个数：4
+	 * 测试：用非递归算法获取二叉树满节点个数
+	 * 结果：
+	 * 二叉树满节点的个数：3
+	 * 测试：用非递归算法获取二叉树半节点个数
+	 * 结果：
+	 * 二叉树半节点的个数：0
+	 */
+	@Test
+	public void getNodeNumTest() {
+		int count1 = BinaryTree.getLeafNodeNum(root);
+		System.out.println("二叉树叶子节点的个数：" + count1);
+		
+		int count2 = BinaryTree.getFullNodeNum(root);
+		System.out.println("二叉树满节点的个数：" + count2);
+		
+		int count3 = BinaryTree.getHalfNodeNum(root);
+		System.out.println("二叉树半节点的个数：" + count3);
+	}
 }

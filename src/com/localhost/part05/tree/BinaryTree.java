@@ -277,6 +277,8 @@ public class BinaryTree {
 		}
 	}
 	
+	/*----------------------- 2017.05.10 -----------------------*/	
+	
 	/**
 	 * 题目：求已知二叉树高度/深度
 	 * 思路：递归计算左子树和右子树的高度，然后找出两棵树中高度的大值，再加一，就是树的高度。
@@ -284,8 +286,350 @@ public class BinaryTree {
 	 * @return 二叉树的高度/深度
 	 */
 	public static int getHeight(BinaryTreeNode<Integer> root) {
-		return 0;
+		/* 基本情况：根节点为空时返回0 */
+		if (root == null) {
+			return 0;
+		}
+		/* 计算子树的高度/深度 */
+		int leftHeight = getHeight(root.getLeft());
+		int rightHeight = getHeight(root.getRight());
+		/* 返回子树的高度 */
+		if (leftHeight > rightHeight) {
+			return (leftHeight + 1);
+		} else {
+			return (rightHeight + 1);
+		}
 	}
+	
+	/**
+	 * 题目：求已知二叉树高度/深度
+	 * 思路：使用层序遍历，使用null作为每一层的结束标志。
+	 * @param root 二叉树的根节点
+	 * @return 二叉树的高度/深度
+	 */
+	public static int getHeightByLevelOrder(BinaryTreeNode<Integer> root) {
+		
+		/* 根节点为空则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		
+		/* 计算二叉树高度 */
+		// 声明并初始化树的层数
+		int level = 0;
+		// 声明并初始化出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入队
+		queue.enQueue(root);
+		// 标记第一层结束
+		queue.enQueue(null);
+		// 遍历队列直到为空
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 检查当前层是否结束
+			if (temp == null) {
+				// 层数自增
+				level++;
+				// 为下一层添加结束标志
+				if (!queue.isEmpty()) {
+					queue.enQueue(null);
+				}
+			} else {
+				// 如果当前节点的左孩子存在则入队
+				if (temp.getLeft() != null) {
+					queue.enQueue(temp.getLeft());
+				}
+				// 如果当前节点的右孩子存在则入队
+				if (temp.getRight() != null) {
+					queue.enQueue(temp.getRight());
+				}
+			}
+		}
+		return level;
+	}
+	
+	/**
+	 * 题目：获取二叉树中最深节点
+	 * 思路：使用层序遍历依次入队，并以null作为每层的结束标志；将出队元素全部存入栈中，最后出栈，遇到null结束即可；
+	 * @param root 二叉树根节点
+	 */
+	public static void getDeepestNodes(BinaryTreeNode<Integer> root) {
+		
+		/* 根节点为空则返回空 */
+		if (root == null) {
+			return;
+		}
+		
+		/* 实现二叉树出队入栈 */
+		// 声明并初始化出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化结束标志
+		BinaryTreeNode<Integer> end = new BinaryTreeNode<Integer>((int) 'z');
+		// 声明并初始化存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		// 声明并初始化存储二叉树节点的栈
+		LinkedListStack<BinaryTreeNode<Integer>> stack = new LinkedListStack<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入队
+		queue.enQueue(root);
+		// 标记第一层结束
+		queue.enQueue(end);
+		
+		// 队列不为空则遍历
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 检查当前层是否结束
+			if (temp == end) {
+				// 为下一层添加结束标志
+				if (!queue.isEmpty()) {
+					queue.enQueue(end);
+				}
+			} else {
+				// 如果当前节点的右孩子存在则入队
+				if (temp.getRight() != null) {
+					queue.enQueue(temp.getRight());
+				}
+				// 如果当前节点的左孩子存在则入队
+				if (temp.getLeft() != null) {
+					queue.enQueue(temp.getLeft());
+				}
+			}
+			// 将出队元素入栈
+			stack.push(temp);
+		}
+		
+		/* 输出结果 */
+		// 将最后一层的结束标志去掉
+		stack.pop();
+		System.out.print("二叉树最深节点：");
+		while (stack.top() != end) {
+			System.out.print(stack.pop().getData() + " ");
+		}
+	}
+	
+	/**
+	 * 题目：删除二叉树中某个节点
+	 * 思路：
+	 * 1.从根节点开始层序遍历，找到要删除的节点
+	 * 2.找到最深节点，如果有多个最深节点，则选择最后一个最深节点即二叉树最底层最右边的节点
+	 * 3.用最深节点替换要删除的节点
+	 * 4.删除最深节点
+	 * @param root 二叉树的根节点
+	 * @param data 要删除节点的数据值
+	 * @return 删除结点后的二叉树根节点
+	 */
+	public static BinaryTreeNode<Integer> deleteBinaryTreeNode(BinaryTreeNode<Integer> root, int data) {
+		/* 根节点为空则返回空 */
+		if (root == null) {
+			return null;
+		}
+		
+		/* 实现二叉树出队入栈 */
+		// 声明要删除的节点
+		BinaryTreeNode<Integer> deleteNode = null;
+		// 声明并初始化出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化结束标志
+		BinaryTreeNode<Integer> end = new BinaryTreeNode<Integer>((int) 'z');
+		// 声明并初始化存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		// 声明并初始化存储二叉树节点的栈
+		LinkedListStack<BinaryTreeNode<Integer>> stack = new LinkedListStack<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入队
+		queue.enQueue(root);
+		// 标记第一层结束
+		queue.enQueue(end);
+		
+		// 队列不为空则遍历
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 检查是否是要删除的节点
+			if (temp.getData() == data) {
+				deleteNode = temp;
+			}
+			// 检查当前层是否结束
+			if (temp == end) {
+				// 为下一层添加结束标志
+				if (!queue.isEmpty()) {
+					queue.enQueue(end);
+				}
+			} else {
+				// 如果当前节点的左孩子存在则入队
+				if (temp.getLeft() != null) {
+					queue.enQueue(temp.getLeft());
+				}
+				// 如果当前节点的右孩子存在则入队
+				if (temp.getRight() != null) {
+					queue.enQueue(temp.getRight());
+				}
+			}
+			// 将出队元素入栈
+			stack.push(temp);
+		}
+		
+		/* 获取最深节点 */
+		// 将最后一层的结束标志去掉
+		stack.pop();
+		// 声明并初始化最深节点
+		BinaryTreeNode<Integer> deepestNode = stack.pop();
+		
+		/* 重置删除节点的值即可 */
+		deleteNode.setData(deepestNode.getData());
+		
+		/* 删除最深节点 */
+		while (!stack.isEmpty()) {
+			temp = stack.pop();
+			if (temp.getLeft() == deepestNode) {
+				temp.setLeft(null);
+			}
+			if (temp.getRight() == deepestNode) {
+				temp.setRight(null);
+			}
+		}
+		return root;
+	}
+	
+	/**
+	 * 题目：用非递归算法获取二叉树叶子节点个数
+	 * 思路：左右孩子都为空的节点为叶子节点
+	 * @param root 二叉树根节点
+	 * @return 叶子节点的个数
+	 */
+	public static int getLeafNodeNum(BinaryTreeNode<Integer> root) {
+		/* 根节点为空则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		
+		/* 计算二叉树叶子节点个数 */
+		// 声明并初始化叶子节点个数
+		int count = 0;
+		// 声明并初始化出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入队
+		queue.enQueue(root);
+		// 遍历队列直到为空
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 检查当前节点是否是叶子节点
+			if ((temp.getLeft() == null) && (temp.getRight() == null)) {
+				// 叶子节点个数自增
+				count++;
+			} else {
+				// 如果当前节点的左孩子存在则入队
+				if (temp.getLeft() != null) {
+					queue.enQueue(temp.getLeft());
+				}
+				// 如果当前节点的右孩子存在则入队
+				if (temp.getRight() != null) {
+					queue.enQueue(temp.getRight());
+				}
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 题目：用非递归算法获取二叉树满节点个数
+	 * 思路：左右孩子都存在的节点为满节点
+	 * @param root 二叉树根节点
+	 * @return 满节点的个数
+	 */
+	public static int getFullNodeNum(BinaryTreeNode<Integer> root) {
+		/* 根节点为空则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		
+		/* 计算二叉树满节点个数 */
+		// 声明并初始化满节点个数
+		int count = 0;
+		// 声明并初始化出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入队
+		queue.enQueue(root);
+		// 遍历队列直到为空
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 检查当前节点是否是满节点
+			if ((temp.getLeft() != null) && (temp.getRight() != null)) {
+				// 叶子节点个数自增
+				count++;
+			} 
+		
+			// 如果当前节点的左孩子存在则入队
+			if (temp.getLeft() != null) {
+				queue.enQueue(temp.getLeft());
+			}
+			// 如果当前节点的右孩子存在则入队
+			if (temp.getRight() != null) {
+				queue.enQueue(temp.getRight());
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 题目：用非递归算法获取二叉树半节点个数
+	 * 思路：仅有一个孩子存在的节点为满节点
+	 * @param root 二叉树根节点
+	 * @return 半节点的个数
+	 */
+	public static int getHalfNodeNum(BinaryTreeNode<Integer> root) {
+		/* 根节点为空则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		
+		/* 计算二叉树半节点个数 */
+		// 声明并初始化半节点个数
+		int count = 0;
+		// 声明并初始化出队元素
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化存储二叉树节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入队
+		queue.enQueue(root);
+		// 遍历队列直到为空
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 检查当前节点是否是半节点
+			if (((temp.getLeft() != null) && (temp.getRight() == null)) || ((temp.getRight() != null) && (temp.getLeft() == null))) {
+				// 半节点个数自增
+				count++;
+			} 
+			
+			// 如果当前节点的左孩子存在则入队
+			if (temp.getLeft() != null) {
+				queue.enQueue(temp.getLeft());
+			}
+			// 如果当前节点的右孩子存在则入队
+			if (temp.getRight() != null) {
+				queue.enQueue(temp.getRight());
+			}
+		}
+		return count;
+	}
+	
+	
+	
 }
 
 
