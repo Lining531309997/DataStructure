@@ -628,6 +628,167 @@ public class BinaryTree {
 		return count;
 	}
 	
+	/*----------------------- 2017.05.12 -----------------------*/	
+	
+	/**
+	 * 题目：判断给定的两棵树结构是否相同
+	 * 思路：
+	 * 两棵树都为空树，则返回true
+	 * 两棵树有任意一棵树不为空时返回false
+	 * 两棵树都不为空，则比较数据并递归地判断左子树和右子树是否相同
+	 * @param root1 二叉树的根节点
+	 * @param root2 二叉树的根节点
+	 * @return true 结构相同 false 结构不相同
+	 */
+	public static boolean AreStructullySameTrees(BinaryTreeNode<Integer> root1, BinaryTreeNode<Integer> root2) {
+		/* 如果两棵树都为空则返回true */
+		if ((root1 == null) && (root2 == null)) {
+			return true;
+		}
+		
+		/* 如果两棵树有任意一棵树不为空时返回false */
+		if ((root1 == null) || (root2 == null)) {
+			return false;
+		}
+		
+		/* 如果两棵树都不为空时，则比较左右子树是否相同 */
+		return (AreStructullySameTrees(root1.getLeft(), root2.getLeft()) && AreStructullySameTrees(root1.getRight(), root2.getRight()));
+	}
+	
+	// 二叉树的直径距离
+	public static int diameter = 0;
+	
+	/**
+	 * 题目：二叉树的直径
+	 * 思路：
+	 * 树的直径(也称作树的宽度)就是树中的两个叶子节点之间的最长路径中的节点数。
+	 * 递归计算左右子树的直径，找出两者的最大值，再加一返回。
+	 * @param root 二叉树的根节点
+	 * @return 二叉树的直径
+	 */
+	public static int diameterOfBinaryTree(BinaryTreeNode<Integer> root) {
+		/* 如果二叉树为空则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		
+		/* 递归计算左右子树的直径 */
+		int left = diameterOfBinaryTree(root.getLeft());
+		int right = diameterOfBinaryTree(root.getRight());
+		
+		/* 修改树的直径 */
+		if ((left + right) > diameter) {
+			diameter = left + right;
+		}
+		return Math.max(left, right) + 1;
+	}
+	
+	/**
+	 * 题目：输出所有从根节点到子节点的路径
+	 * 思路：先保存当前节点的数据到数组，后采用递归遍历左右子树，遇到叶子节点则输出数组的值。这个方法存在资源浪费或数组溢出问题
+	 * @param root 二叉树根节点
+	 * @param path 路径数组
+	 * @param pathLen 路径长度
+	 */
+	public static void printPaths(BinaryTreeNode<Integer> root, int[] path, int pathLen) {
+		/* 如果节点为空则返回 */
+		if (root == null) {
+			return;
+		}
+		
+		/* 将当前节点的数据存入路径数组，并修改数组的长度 */
+		path[pathLen] = root.getData();
+		pathLen++;
+		
+		/* 如果是叶子节点则输出从根节点到此叶子节点的路径 */
+		if ((root.getLeft() == null) && (root.getRight() == null)) {
+			// 遍历数组输出
+			for (int i : path) {
+				System.out.print(i + " ");
+			}
+			// 换行
+			System.out.println();
+			return;
+		}
+		
+		/* 如果不是叶子节点，继续遍历左右子树 */
+		System.out.println(pathLen);
+		printPaths(root.getLeft(), path, pathLen);
+		printPaths(root.getRight(), path, pathLen);
+	}
+	
+	/**
+	 * 题目：判断是否存在路径的数据和等于给定的值；也就是说，判断是否存在一条从根节点到任意叶子节点的路径，该路径上的节点数据和等于给定的值
+	 * 思路：在调用孩子节点之前，先把sum值减去该节点的值。最后检查sum的值是否等于0
+	 * @param root
+	 * @param sum
+	 * @return
+	 */
+	public static boolean hasPathSum(BinaryTreeNode<Integer> root, int sum) {
+		/* 如果节点为空，判断此时sum是否为0 */
+		if (root == null) {
+			return (sum == 0);
+		}
+		/* 节点不为空时递归遍历左右子树 */
+		// 在递归之前先减去该节点的数据
+		int subSum = sum - root.getData();
+		return (hasPathSum(root.getLeft(), subSum) || hasPathSum(root.getRight(), subSum));
+	}
+	
+	/**
+	 * 题目：计算二叉树所有节点之和
+	 * 思路：递归计算左右子树的和，然后加上当前节点的数据值
+	 * @param root 二叉树根节点
+	 * @return 所有节点数据之和
+	 */
+	public static int getSum(BinaryTreeNode<Integer> root) {
+		/* 节点为空时则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		/* 左子树节点值得和 + 当前节点数据值 + 右子树节点值得和 */
+		return (getSum(root.getLeft()) + root.getData() + getSum(root.getRight()));
+	}
+	
+	
+	/**
+	 * 题目：计算二叉树所有节点之和
+	 * 思路：使用非递归的层序遍历，每次元素出队时就进行累加
+	 * @param root 二叉树根节点
+	 * @return 所有节点数据之和
+	 */
+	public static int getSumByLevelOrder(BinaryTreeNode<Integer> root) {
+		/* 节点为空时则返回0 */
+		if (root == null) {
+			return 0;
+		}
+		
+		// 声明并初始化累加和
+		int sum = 0;
+		// 声明并初始化出队元素变量
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化存储节点的队列
+		LinkListQueue<BinaryTreeNode<Integer>> queue = new LinkListQueue<BinaryTreeNode<Integer>>();
+		// 根节点先入队
+		queue.enQueue(root);
+		
+		/* 计算每层的节点数据和 */
+		while (!queue.isEmpty()) {
+			// 获取出队元素
+			temp = queue.deQueue();
+			// 计算累加和
+			sum += temp.getData();
+			// 如果左子树不为空则入队
+			if (temp.getLeft() != null) {
+				queue.enQueue(temp.getLeft());
+			}
+			// 如果右子树不为空则入队
+			if (temp.getRight() != null) {
+				queue.enQueue(temp.getRight());
+			}
+		}
+		return sum;
+	}
 	
 	
 }

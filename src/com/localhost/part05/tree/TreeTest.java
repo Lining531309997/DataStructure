@@ -184,4 +184,74 @@ public class TreeTest {
 		int count3 = BinaryTree.getHalfNodeNum(root);
 		System.out.println("二叉树半节点的个数：" + count3);
 	}
+	
+	/*
+	 * 测试：判断给定的两棵树结构是否相同
+	 * 结果：
+	 * 两棵树是否相同：true
+	 */
+	@Test
+	public void AreStructullySameTreesTest() {
+		BinaryTreeNode<Integer> root2 = root;
+		System.out.println("两棵树是否相同：" + BinaryTree.AreStructullySameTrees(root, root2));
+	}
+	
+	/*
+	 * 测试：二叉树的直径
+	 * 结果：
+	 * 二叉树的直径：4
+	 */
+	@Test
+	public void diameterOfBinaryTreeTest() {
+		// 计算二叉树直径
+		BinaryTree.diameterOfBinaryTree(root);
+		System.out.println("二叉树的直径：" + BinaryTree.diameter);
+	}
+	
+	/*
+	 * 测试：输出所有从根节点到子节点的路径
+	 * 结果：
+	 * 1 2 4 0 0 0 0 0 0 0 
+	 * 1 2 5 0 0 0 0 0 0 0 
+	 * 1 3 6 0 0 0 0 0 0 0 
+	 * 1 3 7 0 0 0 0 0 0 0 
+	 */
+	@Test
+	public void printPathsTest() {
+		int[] path = new int[10];
+		BinaryTree.printPaths(root, path, 0);
+	}
+	
+	/*
+	 * 测试：判断是否存在路径的数据和等于给定的值
+	 * 结果：
+	 * 二叉树路径的数据和等于18:false
+	 */
+	@Test
+	public void hasPathSumTest() {
+		int sum = 18;
+		System.out.println("二叉树路径的数据和等于" + sum + ":" + BinaryTree.hasPathSum(root, sum));
+	}
+	
+	/*
+	 * 测试：计算二叉树所有节点之和
+	 * 结果：
+	 * 二叉树节点累加和：28
+	 * 二叉树节点累加和(非递归)：28
+	 */
+	@Test
+	public void getSumTest() {
+		System.out.println("二叉树节点累加和：" + BinaryTree.getSum(root));
+		System.out.println("二叉树节点累加和(非递归)：" + BinaryTree.getSumByLevelOrder(root));
+	}
 }
+
+
+
+
+
+
+
+
+
+
