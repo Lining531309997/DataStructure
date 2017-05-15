@@ -244,9 +244,91 @@ public class TreeTest {
 		System.out.println("二叉树节点累加和：" + BinaryTree.getSum(root));
 		System.out.println("二叉树节点累加和(非递归)：" + BinaryTree.getSumByLevelOrder(root));
 	}
+	
+	/*
+	 * 测试：将一棵树转换成其镜像树。
+	 * 结果：
+	 * 原二叉树层序遍历：1 2 3 4 5 6 7
+	 * 原二叉树镜像后层序遍历：1 3 2 7 6 5 4 
+	 */
+	@Test
+	public void mirrorOfBinaryTreeTest() {
+		BinaryTreeTraversal<Integer> btt = new BinaryTreeTraversal<Integer>();
+		System.out.print("原二叉树层序遍历：");
+		btt.levelOrder(root);
+		System.out.println();
+		root = BinaryTree.mirrorOfBinaryTree(root);
+		System.out.print("原二叉树镜像后层序遍历：");
+		btt.levelOrder(root);
+	}
+	
+	/*
+	 * 测试：判断两棵树是否互为镜像
+	 * 结果：
+	 * 两棵二叉树是否为镜像：false
+	 */
+	@Test
+	public void areMirrorsTest() {
+		BinaryTreeNode<Integer> root1 = root;
+		BinaryTreeNode<Integer> root2 = root;
+		System.out.println("两棵二叉树是否为镜像：" + BinaryTree.areMirrors(root1, root2));
+	}
+	
+	/*
+	 * 测试：根据中序遍历序列和前序遍历序列构建二叉树
+	 * 结果：
+	 * 两棵二叉树是否为镜像：false
+	 */
+	@Test
+	public void buildBinaryTreeTest() {
+		String[] inOrder = {"D", "B", "E", "A", "F", "C"};
+		String[] preOrder = {"A", "B", "D", "E", "C", "F"};
+		BinaryTreeNode<String> root = BinaryTree.buildBinaryTree(inOrder, preOrder, 0, 5);
+		BinaryTreeTraversal<String> btt = new BinaryTreeTraversal<String>();
+		System.out.print("二叉树前序遍历：");
+		btt.preOrder(root);
+		System.out.println();
+		System.out.print("二叉树中序遍历：");
+		btt.inOrder(root);
+	}
+	
+	/*
+	 * 测试：打印二叉树中某节点的所有祖先节点
+	 * 结果：
+	 * 节点7的祖先节点：3 1 
+	 */
+	@Test
+	public void printAllAncestorsTest() {
+		BinaryTreeNode<Integer> node = btn7;
+		System.out.print("节点" + node.getData() + "的祖先节点：");
+		BinaryTree.printAllAncestors(root, node);
+	}
+	
+	/*
+	 * 测试：查找二叉树中两个节点的最近公共祖先(LCA,Lowest Common Ancestor)
+	 * 结果：
+	 * 节点2节点6的最近公共祖先节点：1
+	 */
+	@Test
+	public void LCATest() {
+		BinaryTreeNode<Integer> n = btn2;
+		BinaryTreeNode<Integer> m = btn6;
+		System.out.print("节点" + n.getData() + "节点" + m.getData() + "的最近公共祖先节点：" + BinaryTree.LCA(root, n, m).getData());
+	}
+	
+	/*
+	 * 测试：Zigzag树遍历
+	 * 结果：
+	 * ZigZag遍历：1324567
+	 */
+	@Test
+	public void zigZagTraversalTest() {
+		System.out.print("ZigZag遍历：");
+		BinaryTree.zigZagTraversal(root);
+	}
+	
+	
 }
-
-
 
 
 

@@ -790,7 +790,264 @@ public class BinaryTree {
 		return sum;
 	}
 	
+	/*----------------------- 2017.05.14 -----------------------*/	
 	
+	/**
+	 * 题目：将一棵树转换成其镜像树。
+	 * 思路：树的镜像指的是互相交换非叶子节点的左子树、右子树而得到的一棵树。如下两棵树：
+	 * 			1					1
+	 * 		   / \	               / \
+	 *        2   3               3   2
+	 *       / \					 / \
+	 *      4   5     				5   4
+	 * @param root 二叉树根节点
+	 * @return 镜像树的根节点
+	 */
+	public static BinaryTreeNode<Integer> mirrorOfBinaryTree(BinaryTreeNode<Integer> root) {
+		if (root != null) {
+			/* 交换节点的左右子树 */
+			BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+			temp = root.getLeft();
+			root.setLeft(root.getRight());
+			root.setRight(temp);
+			/* 镜像左右子树 */
+			mirrorOfBinaryTree(root.getLeft());
+			mirrorOfBinaryTree(root.getRight());
+		}
+		/* 返回镜像后的二叉树根节点 */
+		return root;
+	}
+	
+	/**
+	 * 题目：判断两棵树是否互为镜像
+	 * 思路：
+	 * 两棵树都为空则是镜像
+	 * 两棵树有一树不为空则不是镜像
+	 * 两棵树都不为空，先比较当前节点值、其次比较roo1的左子树与root2的右子树、最后比较roo1的右子树与root2的左子树
+	 * @param root 二叉树根节点
+	 * @return true 是镜像 false 不是镜像
+	 */
+	public static boolean areMirrors(BinaryTreeNode<Integer> root1, BinaryTreeNode<Integer> root2) {
+		/* 如果两棵树都为空则是镜像 */
+		if ((root1 == null) && (root2 == null)) {
+			return true;
+		}
+		/* 如果两棵树有一树不为空则不是镜像 */
+		if ((root1 == null) || (root2 == null)) {
+			return false;
+		}
+		/* 两棵树都不为空 */
+		// 先比较当前节点的数据值
+		if (root1.getData() != root2.getData()) {
+			return false;
+		} 
+		// 递归比较节点的左右子树
+		return (areMirrors(root1.getLeft(), root2.getRight()) && areMirrors(root1.getRight(), root2.getLeft()));
+	}
+	
+	// 前序索引
+	private static int preIndex = 0;
+	
+	/**
+	 * 题目：根据中序遍历序列和前序遍历序列构建二叉树
+	 * 思路：考虑一下遍历序列
+	 * 中序遍历序列：D B E A F C
+	 * 前序遍历序列：A B D E C F
+	 * 在前序遍历序列中，最左边的元素是树的根节点。所以A是给定序列的根。通过中序找到A，能够找到A左边的所有元素，即A的左子树；也能够找到A右边所有的元素，即A的右子树。
+	 * 						A
+	 * 					   / \
+	 * 					 DBE FC
+	 * 继续递归可得
+	 * 						A
+	 * 					   / \
+	 * 					  B   C
+	 * 					 / \ /
+	 * 					D  E F
+	 * @param inOrder 中序遍历序列
+	 * @param preOrder 前序遍历序列
+	 * @param inStart 中序遍历的起始索引
+	 * @param inEnd 中序遍历的结束索引
+	 * @return 二叉树的根节点
+	 */
+	public static BinaryTreeNode<String> buildBinaryTree(String[] inOrder, String[] preOrder, int inStart, int inEnd) {
+		/* 中序的起始序号大于结束序号说明序列遍历结束 */
+		if (inStart > inEnd) {
+			return null;
+		}
+		
+		/* 创建新节点并赋值 */
+		BinaryTreeNode<String> newNode = new BinaryTreeNode<String>();
+		newNode.setData(preOrder[preIndex]);
+		// 前序索引自增
+		preIndex++;
+		
+		/* 中序的起始序号等于结束序号说明该节点无孩子节点则返回该节点 */
+		if (inStart == inEnd) {
+			return newNode;
+		}
+		
+		/* 根据当前节点查找该节点值在中序序列中的索引 */
+		int inIndex = 0;
+		for (int i = inStart; i <= inEnd; i++) {
+			if (inOrder[i] == newNode.getData()) {
+				inIndex = i;
+				break;
+			}
+		}
+		
+		/* 利用该节点在中序中的索引分别建立左子树和右子树 */
+		newNode.setLeft(buildBinaryTree(inOrder, preOrder, inStart, inIndex - 1));
+		newNode.setRight(buildBinaryTree(inOrder, preOrder, inIndex + 1, inEnd));
+		
+		return newNode;
+	}
+	
+	/**
+	 * 题目：打印二叉树中某节点的所有祖先节点
+	 * 思路：
+	 * 先检查当前节点的左孩子或右孩子是否是目标节点
+	 * 再检查当前节点的左子树或右子树是否包含目标节点
+	 * @param root 二叉树根节点
+	 * @param node 要查找的目标节点
+	 * @return true 包含目标节点 false 不包含目标节点
+	 */
+	public static boolean printAllAncestors(BinaryTreeNode<Integer> root, BinaryTreeNode<Integer> node) {
+		/* 如果当前节点为空则返回 */
+		if (root == null) {
+			return false;
+		}
+		/* 如果当前节点的左孩子或右孩子为目标节点则打印当前节点 */
+		if ((root.getLeft() == node) || (root.getRight() == node)) {
+			System.out.print(root.getData() + " ");
+			return true;
+		}
+		/* 如果当前节点的左子树中或右右子树中包含目标节点则打印当前节点 */
+		if ((printAllAncestors(root.getLeft(), node)) || (printAllAncestors(root.getRight(), node))) {
+			System.out.print(root.getData() + " ");
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 题目：查找二叉树中两个节点的最近公共祖先(LCA,Lowest Common Ancestor)
+	 * 思路：
+	 * 检查root是否与n或m节点相同，相同则返回根节点
+	 * 检查左子树、右子树中是否存在n和m的最近公共祖先，若存在则返回；若左右子树都存在则返回根节点
+	 * @param root 二叉树根节点
+	 * @param n 二叉树节点
+	 * @param m 二叉树节点
+	 * @return 最近公共祖先节点
+	 */
+	public static BinaryTreeNode<Integer> LCA(BinaryTreeNode<Integer> root, BinaryTreeNode<Integer> n, BinaryTreeNode<Integer> m) {
+		/* 如果当前节点为空则返回 */
+		if (root == null) {
+			return root;
+		}
+		/* 如果n或m有一个为当前节点，则返回当前节点 */
+		if ((root == n) || (root == m)) {
+			return root;
+		}
+		/* 分别获取n和m在左子树、右子树中LCA */
+		BinaryTreeNode<Integer> left = LCA(root.getLeft(), n, m);
+		BinaryTreeNode<Integer> right = LCA(root.getRight(), n, m);
+		
+		if ((left != null) && (right != null)) {
+			return root;
+		} else {
+			return (left != null) ? left :right;
+		}
+	}
+	
+	/*----------------------- 2017.05.15 -----------------------*/	
+	
+	/**
+	 * 题目：Zigzag树遍历
+	 * 思路：
+	 * 例如下面二叉树的Zigzag遍历输出为：A CB DEF
+	 * 						A
+	 * 					   / \
+	 * 					  B   C
+	 * 					 / \ /
+	 * 					D  E F
+	 * 使用两个栈很容易解决。假设两个栈：currentLevel和nextLevel，以及一个变量来记录当前层的输出顺序(从左至右或从右至左)
+	 * 节点从currentLevel栈出栈并输出，判断当前层的输出顺序：
+	 * 如果当前层输出顺序为从左至右，按照先左孩子后右孩子的顺序压入nextLevel栈中；
+	 * 如果当前层输出顺序为从右至左，按照先右孩子后左孩子的顺序压入nextLevel栈中；
+	 * 因为栈是后进先出结构，所以节点从nextLevel出栈时按照相反顺序。
+	 * 最后判断当前层是否为空，为空时交换两个栈。
+	 * @param root 二叉树根节点
+	 */
+	public static void zigZagTraversal(BinaryTreeNode<Integer> root) {
+		/* 根节点为空则返回 */
+		if (root == null) {
+			return;
+		}
+		
+		/* 变量声明初始化 */
+		// 打印方向标志
+		boolean leftToRight = true;
+		// 声明并初始化出栈元素变量
+		BinaryTreeNode<Integer> temp = new BinaryTreeNode<Integer>();
+		// 声明并初始化当前层栈
+		LinkedListStack<BinaryTreeNode<Integer>> currentLevel = new LinkedListStack<BinaryTreeNode<Integer>>();
+		// 声明并初始化下一层栈
+		LinkedListStack<BinaryTreeNode<Integer>> nextLevel = new LinkedListStack<BinaryTreeNode<Integer>>();
+		
+		// 根节点先入栈
+		currentLevel.push(root);
+		
+		/* 遍历并打印ZigZag */
+		while (!currentLevel.isEmpty()) {
+			// 获取当前层栈出栈元素
+			temp = currentLevel.pop();
+			// 输出当前层数据
+			System.out.print(temp.getData());
+			
+			/* 确定下一层入栈数据 */
+			if (leftToRight) {
+				// 当前层是从左至右输出，则下一层从右至左输出，栈是先入后出
+				if (temp.getLeft() != null) {
+					nextLevel.push(temp.getLeft());
+				}
+				if (temp.getRight() != null) {
+					nextLevel.push(temp.getRight());
+				}
+			} else {
+				// 当前层是从右至左输出，则下一层从左至右输出，栈是先入后出
+				if (temp.getRight() != null) {
+					nextLevel.push(temp.getRight());
+				}
+				if (temp.getLeft() != null) {
+					nextLevel.push(temp.getLeft());
+				}
+			}
+			
+			/* 如果当前层输出结束，则与下一层交换 */
+			if (currentLevel.isEmpty()) {
+				// 输出方向切换
+				leftToRight = !leftToRight;
+				// 交换当前层与下一层
+				LinkedListStack<BinaryTreeNode<Integer>> tempLevel = currentLevel;
+				currentLevel = nextLevel;
+				nextLevel = tempLevel;
+			}
+		}
+	}
+	
+	/**
+	 * 题目：n个节点可以组合成多少棵不同的二叉树？
+	 * 思路：
+	 * 例如，考虑3个节点的树，最多有5(2^3 - 3)种不同的组合形式。如下：
+	 * 	
+	 * 			0				0			0			0				0
+	 * 		   / \			   /		   /  			 \				 \
+	 * 		  0   0           0			  0				  0				  0
+	 * 						 /			   \			   \			 /
+	 * 						0				0				0			0
+	 * 
+	 * 一般来讲，如果有n个节点，则存在(2^n - n)棵不同的二叉树
+	 */
 }
 
 
