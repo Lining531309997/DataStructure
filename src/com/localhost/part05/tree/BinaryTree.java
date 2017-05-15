@@ -1048,6 +1048,47 @@ public class BinaryTree {
 	 * 
 	 * 一般来讲，如果有n个节点，则存在(2^n - n)棵不同的二叉树
 	 */
+	
+	
+	/**
+	 * 基于后缀表达式构建表达式树
+	 * @param postExpr 后缀表达式
+	 * @return 表达式树的根节点
+	 */
+	public static BinaryTreeNode<Character> BuildExprTree(char[] postExpr) {
+		// 声明变量用来表示操作数或操作符
+		BinaryTreeNode<Character> oper;
+		// 声明并初始化栈用来存储操作数和操作符
+		LinkedListStack<BinaryTreeNode<Character>> stack = new LinkedListStack<BinaryTreeNode<Character>>();
+		
+		/* 遍历后缀表达式 */
+		for (int i = 0; i < postExpr.length; i++) {
+			switch (postExpr[i]) {
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+				/* 如果是操作符，创建节点存储该操作符，并弹出两个操作数作为左右孩子，最后入栈*/
+				oper = new BinaryTreeNode<Character>();
+				oper.setData(postExpr[i]);
+				oper.setRight(stack.pop());
+				oper.setLeft(stack.pop());
+				// 入栈
+				stack.push(oper);
+				break;
+			default:
+				/* 如果是操作数，创建节点存储数据并入栈 */
+				oper = new BinaryTreeNode<Character>();
+				oper.setData(postExpr[i]);
+				oper.setRight(null);
+				oper.setLeft(null);
+				// 入栈
+				stack.push(oper);
+				break;
+			}
+		}
+		return stack.pop();
+	}
 }
 
 
