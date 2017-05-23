@@ -206,11 +206,15 @@ public class Sort {
 	}
 	
 	/**
-	 * 快速排序(Quick Sort)
-	 * 
-	 * @param array
-	 * @param low
-	 * @param high
+	 * 快速排序(Quick Sort)也称为分区交换排序
+	 * 思路：
+	 * 1.如果数组中只有一个元素或者没有数据需要排序则直接返回
+	 * 2.选择数组中的一个元素作为中心点(pivot)，通常选择数组最右侧的元素
+	 * 3.把数组分为两部分，一部分是元素大于中心点，一部分是元素小于中心点
+	 * 4.递归处理两部分数组
+	 * @param array 原始数组
+	 * @param low 数组的起始位置
+	 * @param high 数组的结束位置
 	 */
 	public static void quickSort(int[] array, int low, int high) {
 		if (high > low) {
