@@ -31,9 +31,41 @@ public class SortTest {
 	}
 	
 	@Test
-	public void InsertionortTest() {
+	public void InsertionSortTest() {
 		
 		Sort.insertionSort(array);
+		for (int i : array) {
+			System.out.print(i + " ");
+		}
+	}
+	
+	@Test
+	public void ShellSortTest() {
+		
+		Sort.shellSort(array);
+		for (int i : array) {
+			System.out.print(i + " ");
+		}
+	}
+	
+	@Test
+	public void MergeSortTest() {
+		
+		int left = 0;
+		int right = array.length - 1;
+		Sort.mergeSort(array, left, right);
+		for (int i : array) {
+			System.out.print(i + " ");
+		}
+	}
+	
+	
+	@Test
+	public void QuickSortTest() {
+		
+		int low = 0;
+		int high = array.length - 1;
+		Sort.quickSort(array, low, high);
 		for (int i : array) {
 			System.out.print(i + " ");
 		}
