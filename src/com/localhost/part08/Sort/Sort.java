@@ -81,7 +81,7 @@ public class Sort {
 	}
 	
 	/**
-	 * 插入排序(Selection Sort)
+	 * 插入排序(Insertion Sort)
 	 * 是一种简单且高效的比较排序算法。典型的原地排序
 	 * 思路：每次从输入数据中移除一个元素并将其插入已排序序列的正确位置，直到所有输入输入元素都插入有序序列中。
 	 * @param array
