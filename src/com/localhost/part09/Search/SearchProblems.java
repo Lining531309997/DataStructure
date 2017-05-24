@@ -182,5 +182,91 @@ public class SearchProblems {
 		return X^Y;
 	}
 	
+	/**
+	 * 题目：给定一个含n个元素的数组，在数组中查找两个元素，这两个元素的和等于给定的元素K
+	 * 思路：
+	 * 1.先将数组排序
+	 * 2.设置索引low=0，high=n-1，并计算sum=A[low]+A[high]
+	 * 3.如果sum==k,则直接输出当前元素对的索引
+	 * 4.如果sum>k,则high减一
+	 * 5.如果sum<k,则low加一
+	 */
+	public static void search(int[] array, int k) {
+		// 先对数组进行排序
+		Sort.bubbleSortImproved(array);
+		int sum;
+		int low = 0;
+		int high = array.length - 1;
+		while (low < high) {
+			sum = array[low] + array[high];
+			if (sum == k) {
+				System.out.println("Items Found, low:" + low + " high:" + high);
+				return;
+			} else if (sum < k) {
+				low++;
+			} else {
+				high--;
+			}
+		}
+		System.out.println("Items No Found: No Such Elements !");
+	}
+	
+	/**
+	 * 题目：查找和最接近0的两个元素：给定一个包含正数和负数的数组，查找两个元素，使得它们的和最接近0.
+	 * 例如：对于数组A = {1， 60， -10， 70， -80， 85}，算法找到的两个元素为-80 和 85
+	 * 思路：
+	 * 1.对给定的数组排序，positiveClosest表示最小正数和，negativeClosest表示最小负数和
+	 * 2.设置索引low=0，high=n-1，并计算sum=A[low]+A[high]
+	 * 3.如果sum大于0且小于positiveClosest,则更新positiveClosest
+	 * 4.如果sum小于0且大于negativeClosest,则更新negativeClosest
+	 * 5.如果sum等于0则直接输出当前元素对
+	 */
+	public static void twoElementsWithMinSum(int[] array) {
+		// 先对数组进行排序
+		Sort.bubbleSortImproved(array);
+		// 初始化最小正数和以及最小负数和
+		int positiveClosest = Integer.MAX_VALUE;
+		int negativeClosest = Integer.MIN_VALUE;
+		// 初始化最小正数和的元素对索引
+		int positive_low = 0;
+		int positive_high = array.length - 1;
+		// 初始化最小负数和的元素对索引
+		int negative_low = 0;
+		int negative_high = array.length - 1;
+		// 数组元素的和
+		int sum;
+		// 数组的索引
+		int low = 0;
+		int high = array.length - 1;
+		while (low < high) {
+			sum = array[low] + array[high];
+			if (sum > 0) {
+				if (sum < positiveClosest) {
+					positiveClosest = sum;
+					positive_low = low;
+					positive_high = high;
+				}
+				high--;
+			} else if (sum < 0) {
+				if (sum > negativeClosest) {
+					negativeClosest = sum;
+					negative_low = low;
+					negative_high = high;
+				}
+				low++;
+			} else {
+				// 数组元素和为0
+				System.out.println("Elements:" + array[low] + " And " + array[high]);
+				return;
+			}
+		}
+		// 判断元素对
+		if (Math.abs(positiveClosest) > Math.abs(negativeClosest)) {
+			System.out.println("Elements:" + array[negative_low] + " And " + array[negative_high]);
+		} else {
+			System.out.println("Elements:" + array[positive_low] + " And " + array[positive_high]);
+		}
+	}
+	
 	
 }

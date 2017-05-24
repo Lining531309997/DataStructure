@@ -11,4 +11,30 @@ public class SearchProblemsTest {
 		SearchProblems.checkDuplicatesSorting(array);
 		SearchProblems.checkDuplicates(array);
 	}
+	
+	@Test
+	public void missingNumberTest() {
+		int[] array = {1, 2, 4, 6, 3, 7, 8};
+		int a = SearchProblems.findMissingNumber1(array);
+		int b = SearchProblems.findMissingNumber2(array);
+		int c = SearchProblems.findMissingNumber3(array);
+		int d = SearchProblems.findMissingNumber4(array);
+		System.out.println("A:" + a);
+		System.out.println("B:" + b);
+		System.out.println("C:" + c);
+		System.out.println("D:" + d);
+	}
+	
+	@Test
+	public void searchTest() {
+		int k = 10;
+		int[] array = {1, 2, 4, 6, 3, 7, 8};
+		SearchProblems.search(array, k);
+	}
+	
+	@Test
+	public void twoElementsWithMinSumTest() {
+		int[] array = {1, 60, -10,  70, -80, 85};
+		SearchProblems.twoElementsWithMinSum(array);
+	}
 }
