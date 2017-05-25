@@ -37,4 +37,22 @@ public class SearchProblemsTest {
 		int[] array = {1, 60, -10,  70, -80, 85};
 		SearchProblems.twoElementsWithMinSum(array);
 	}
+	
+	@Test
+	public void dutchNationalFlagTest() {
+		int[] array = {12, 34, 45, 9, 8, 90, 3};
+		SearchProblems.dutchNationalFlag(array);
+		for (int i : array) {
+			System.out.print(i + " ");
+		}
+	}
+	
+	@Test
+	public void dutchFlagTest() {
+		int[] array = {0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1};
+		SearchProblems.dutchFlag(array);
+		for (int i : array) {
+			System.out.print(i + " ");
+		}
+	}
 }

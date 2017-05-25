@@ -268,5 +268,115 @@ public class SearchProblems {
 		}
 	}
 	
-	
+	/**
+	 * 题目：将偶数与奇数分开
+	 * 给定一个数组A[]，写出一个函数，使其能够将偶数与奇数分开。该函数把所有偶数放在前面，奇数放在后面。
+	 * 例如，输入 = {12, 34, 45, 9, 8, 90, 3} 输出 = {12, 34, 90, 8, 9, 45, 3}
+	 * 在输出时，数字顺序可以改变，也就是34可以出现在12之前
+	 * 
+	 * 思路：这是荷兰国旗问题的变体
+	 * 1.初始化两个索引left和right：left=0，right=n-1
+	 * 2.持续递增left，直到发现一个奇数
+	 * 3.持续递增right，直到发现一个偶数
+	 * 4.如果left<right，则互相交换A[left]和A[right]
+	 */
+	 public static void dutchNationalFlag(int[] array) {
+		 // 初始化索引
+		 int left = 0;
+		 int right = array.length - 1;
+		 // 初始化临时变量
+		 int temp = 0;
+		 while (left < right) {
+			// 左侧遇到偶数则索引加一
+			while ((array[left] % 2 == 0) && (left < right)) {
+				left++;
+			}
+			// 右侧遇到奇数则索引减一
+			while ((array[right] % 2 == 1) && (left < right)) {
+				right--;
+			}
+			if (left < right) {
+				// 交换数据
+				temp = array[left];
+				array[left] = array[right];
+				array[right] = temp;
+				// 更新索引
+				left++;
+				right--;
+			}
+		}
+	 }
+	 
+	 /**
+	  * 荷兰国旗问题
+	  * 给定一个由0、1、2组成的数组A[]，对其进行排序。
+	  * 例子 输入 = {0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1}
+	  *    输出 = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2} 
+	  * 思路：
+	  * 参考：http://blog.csdn.net/sunnyyoona/article/details/43488481
+	  * 设置两个指针begin指向前部的末尾的下一个元素（刚开始默认前部无0，所以指向第一个位置），end指向后部开头的前一个位置（刚开始默认后部无2，所以指向最后一个位置），然后设置一个遍历指针current，从头开始进行遍历。
+	  * （1）若遍历到的位置为0，则说明它一定属于前部，于是就和begin位置进行交换，然后current向前移动一个位置，begin也向前移动一个位置（表示前边的已经都排好了）。
+	  * （2）若遍历到的位置为1，则说明它一定属于中部，根据总思路，中部的我们都不动，然后current向前移动一个位置。
+	  * （3）若遍历到的位置为2，则说明它一定属于后部，于是就和end位置进行交换，由于交换完毕后current指向的可能是属于前部的，若此时current前进则会导致该位置不能被交换到前部，所以此时current不前进。而同1），end向前移动一个位置。
+	  */
+	 public static void dutchFlag(int[] array) {
+		 // 初始化索引
+		 int low = 0;
+		 int mid = 0;
+		 int high = array.length - 1;
+		 // 遍历数组
+		 while (mid <= high) {
+			switch (array[mid]) {
+			case 0:
+				swap(array, low, mid);
+				low++;
+				mid++;
+				break;
+			case 1:
+				mid++;
+				break;
+			case 2:
+				swap(array, mid, high);
+				high--;
+				break;
+			default:
+				break;
+			}
+		}
+	 }
+	 
+	 /**
+	  * 交换数据
+	  * 注意Java的值传递和引用传递
+	  * 可以参考：http://blog.csdn.net/hello_java_noob_go/article/details/54585300
+	  * @param source
+	  * @param target
+	  */
+	 public static void swap(int[] array, int a, int b) {
+		 int temp = array[a];
+		 array[a] = array[b];
+		 array[b] = temp;
+	 }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
