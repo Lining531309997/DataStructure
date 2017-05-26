@@ -22,4 +22,10 @@ public class StringMatchTest {
 		int index = StringMatch.robinKarp(txt, part);
 		System.out.println(txt.substring(index, index + part.length()));
 	}
+	
+	@Test
+	public void KMPTest() {
+		int index = StringMatch.KMP(txt, part);
+		System.out.println(txt.substring(index, index + part.length()));
+	}
 }

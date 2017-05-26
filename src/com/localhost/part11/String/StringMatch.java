@@ -113,7 +113,74 @@ public class StringMatch {
 		return -1;
 	}
 	
+	/**
+	 * 根据pattern构造部分匹配表
+	 * @param pattern
+	 */
+	private static int[] F; // 前缀函数、前缀表或失配函数
+	public static void prefixTable(String pattern) {
+		// 获取文本以及字符串的长度
+		int m = pattern.length();
+		// 字符串转换成字符数组
+		char[] pat = pattern.toCharArray();
+		
+		// 初始化变量
+		int i = 1;
+		int j = 0;
+		F = new int[m];
+		F[0] = 0;
+		
+		while (i < m) {
+			if (pat[i] == pat[j]) {
+				F[i] = j + 1;
+				i++;
+				j++;
+			} else if (j > 0) {
+				j = F[j - 1];
+			} else {
+				F[i] = 0;
+				i++;
+			}
+		}
+	}
 	
+	/**
+	 * KMP(Knuth Morris Pratt)字符串匹配算法
+	 * 参考：http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html
+	 * 	   http://www.ituring.com.cn/article/59881
+	 * @param text
+	 * @param pattern
+	 * @return
+	 */
+	public static int KMP(String text, String pattern) {
+		// 获取文本以及字符串的长度
+		int n = text.length();
+		int m = pattern.length();
+		// 字符串转换成字符数组
+		char[] txt = text.toCharArray();
+		char[] pat = pattern.toCharArray();
+		
+		// 构造部分匹配表
+		prefixTable(pattern);
+		// 匹配字符串
+		int i = 0;
+		int j = 0;
+		while (i < n) {
+			if (txt[i] == pat[j]) {
+				if (j == (m - 1)) {
+					return (i - j);
+				} else {
+					i++;
+					j++;
+				}
+			} else if (j > 0) {
+				j = F[j - 1];
+			} else {
+				i++;
+			}
+		}
+		return -1;
+	}
 }
 
 
